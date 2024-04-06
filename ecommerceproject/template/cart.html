@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+   This is the cart page .Proceed the review your items and place the order
+{% endblock %}
+{% block title %}
+    Cart-Shopify pvt ltd
+{% endblock %}
+
+{% block content %}
+{% if not cart_items %}
+<div>
+    <div class="text-center">
+        <br>
+        <h1 class="text-center my_title">
+            Your shopping cart is empty
+        </h1>
+        <br>
+        <p class="text-center">
+            Please check <a href="{% url 'bcart:allProdCat' %}">Here</a>to continue shopping.
+        </p>
+    </div>
+</div>
+{% else %}
+<div>
+    <div class="text-center">
+        <br>
+        <h1 class="text-center my_title">
+            Your shopping cart
+        </h1>
+        <br>
+    </div>
+</div>
+<div class="row mx-auto">
+    <div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center">
+     <table class="table my_custom_table">
+         <thead class="my_custom_thead">
+           <tr>
+             <th colspan="5">
+                 Your items
+             </th>
+           </tr>
+         </thead>
+         <tbody>
+         {% for cart_item in cart_items %}
+         <tr>
+             <td>
+                 <a href="cart_item.products.get_absolute_url"><img src="{{cart_item.products.image.url}}" width=100px; height="100px;" alt="" class="float-left rounded custom_image"></a>
+             </td>
+             <td class="text-left">
+                 {{cart_item.products.name}}<br>
+                 SKU:{{cart_item.products.id}}<br>
+                 Price:Rs.{{cart_item.products.price}}<br>
+                 Qty: {{cart_item.quantity}} * {{cart_item.products.price}}
+             </td>
+             <td>
+                 Rs.{{cart_item.sub_total}}
+             </td>
+
+             <td>
+                 {% if cart_item.quantity < cart_item.products.stock %}
+                <td>
+                  <a href="{% url 'oncart:add_cart' cart_item.products.id %}" class="custom_a"><i class="fa-regular fa-plus"></i></a>&nbsp;&nbsp;
+                  <a href="{% url 'oncart:cart_remove' cart_item.products.id %}" class="custom_a"><i class="fa-solid fa-minus"></i></a>&nbsp;
+                  <a href="{% url 'oncart:full_remove' cart_item.products.id %}" class=custom_a"><i class="fa-solid fa-trash"></i></a>&nbsp;
+                </td>
+                {% else %}
+                 <td>
+                    <a href="{% url 'oncart:cart_remove' cart_item.products.id %}" class="custom_a"><i class="fa-solid fa-minus"></i></a>&nbsp;&nbsp;
+                    <a href="{% url 'oncart:full_remove' cart_item.products.id %}" class="custom_a"><i class="fa-solid fa-trash"></i></a>&nbsp;
+                 </td>
+                 {% endif %}
+             </td>
+         </tr>
+         {% endfor %}
+         </tbody>
+     </table>
+    </div>
+   <div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center">
+       <table class="table my_custom_table">
+           <thead class="my_custom_thead">
+            <tr>
+                <th>
+                    Checkout
+                </th>
+            </tr>
+           </thead>
+           <tbody>
+             <tr>
+                <td>
+                    Please review your cart items before proceeding with the order payment.
+                </td>
+             </tr>
+           <tr>
+               <td class="text-left">
+                   Your Total is :<strong>{{ total }}</strong>
+               </td>
+           </tr>
+           </tbody>
+       </table>
+       <div class="mx-auto">
+           <a href="{% url 'bcart:allProdCat' %}" class="btn btn-secondary btn-block my_custom_button">Continue Shopping</a>
+       </div>
+   </div>
+</div>
+{% endif %}
+{% endblock %}
